@@ -1,0 +1,443 @@
+================================================================================
+ANKOVEX HUB  —  PROJECT INFO / WORK LOG   (READ THIS FILE FIRST)
+================================================================================
+Last updated : 04 Oct 2026
+Updated by    : OpenCode AI session (continuing work left by a GLM session that
+                ran out of tokens)
+File purpose  : Any AI model (GLM, GPT, Claude, Gemini, ...) — open this file
+                first. It tells you what this project is, what work is already
+                done, what is broken/pending, where the backup is, and the rules
+                to follow. Do NOT start from scratch.
+
+--------------------------------------------------------------------------------
+1. WHAT THIS PROJECT IS
+--------------------------------------------------------------------------------
+"Ankovex Hub" — a fully static website (HTML + CSS + JS only) for a gaming /
+MSTS (Microsoft Train Simulator) Indian addons download hub.
+
+  * No build system, no framework, no npm, no server, no backend.
+  * No git repository (folder is NOT a git repo).
+  * Everything is inside 3 HTML files (each file contains its own CSS + JS).
+  * Only external dependency: Google Fonts (Sora + Inter) loaded from CDN.
+  * To run: just double-click index.html (works on file:// and on any host:
+    GitHub Pages, Netlify, Hostinger, etc.).
+
+Folder : C:\Users\2011n\Downloads\Ankovex Games
+
+--------------------------------------------------------------------------------
+2. FILE MAP
+--------------------------------------------------------------------------------
+index.html              Home page. Hero, stats, games section, MSTS addon cards,
+                        CTA, footer. Has the GLOBAL search box with a dropdown
+                        of results (routes / locos / games / sounds).
+
+msts-routes.html        Routes listing page. 6 route cards (NR/CR/WR/SR/ER),
+                        search box (#routeSearch), zone filter chips,
+                        install guide, footer.
+
+msts-locomotives.html   Locomotives listing page. 6 loco cards, search box
+                        (#locoSearch), power-type filter chips, install guide,
+                        footer.
+
+info.txt                THIS FILE. Project memory / work log.
+
+image.png               Screenshot / image asset (16 KB).
+
+backup/                 Pre-change backup of the 3 HTML files (see section 6).
+
+.kilo/                  Kilo editor config (kilo.jsonc + .gitignore). Not part of
+                        the website — do not delete, do not link to it.
+
+--------------------------------------------------------------------------------
+3. SITE STRUCTURE & LINKS
+--------------------------------------------------------------------------------
+Internal page links (relative, must stay relative):
+    index.html                -> home
+    index.html#home / #games / #msts / #why   -> home page sections
+    msts-routes.html          -> routes listing
+    msts-locomotives.html     -> locomotives listing
+
+Nav bars:
+    index        : Home, Games, MSTS Addons, Why Us
+    routes page  : Home, Games, MSTS Routes(active), MSTS Addons, Why Us
+    locos page   : Home, Games, MSTS Routes, MSTS Locos(active), MSTS Addons,
+                   Why Us
+    Footer on all pages: Explore / Collections / Support columns + socials.
+
+External:
+    Google Fonts: https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600&display=swap
+    Theme color : #05070f     Site title: "Ankovex Hub — Games & MSTS Addons"
+
+PLACEHOLDER links (all still href="#" — these are NOT finished):
+    * Every "Download" button on route + loco cards.
+    * "Download/Browse/Access" links on the 3 games cards.
+    * Sounds card + Mods & Addons card (no dedicated pages exist yet).
+    * Socials (Telegram / Discord / YouTube / Instagram) in all footers.
+    * Footer: Request a File / Request a Route / Request a Loco /
+      Report Broken Link / Contact / Privacy / Terms / DMCA.
+    -> Clicking href="#" no longer throws the page to the top (handled in JS).
+
+No real download URLs, no analytics, no ads.
+
+--------------------------------------------------------------------------------
+4. WORK ALREADY DONE BEFORE THIS SESSION (by the previous GLM model)
+--------------------------------------------------------------------------------
+The GLM session ran out of tokens mid-task. Its task was:
+  "In the search box, if I search 'New Delhi – Ambala Cantt – Kalka' or any
+   keyword on the routes or locomotives page, show the result — fix the search."
+
+What GLM had already implemented (files were last written 4 Oct 2026, 5:20–5:21 PM):
+  * index.html : a global search dropdown ("searchableItems" array with 16
+    entries: 6 routes, 6 locos, 3 games, 1 sound) that renders results in
+    ".search-results-popup" and links to e.g. msts-routes.html?q=kalka
+  * msts-routes.html + msts-locomotives.html : read the ?q= URL parameter and
+    pre-fill + apply the local search box.
+  * All 3 files already had: html{scroll-behavior:smooth;scroll-padding-top:80px}
+
+All 3 script blocks were verified syntactically valid (no JS syntax errors).
+
+--------------------------------------------------------------------------------
+5. WORK DONE IN THIS SESSION (4 Oct 2026)  <-- CURRENT STATE
+--------------------------------------------------------------------------------
+
+5.1 SEARCH FIX (the main task — search now actually shows results)
+Problem: the old code used a plain case-insensitive substring test
+(`text.toLowerCase().includes(q)`), so it failed for normal human input:
+   - "New Delhi – Ambala Cantt – Kalka" typed with a normal hyphen "-" instead
+     of the en-dash "–"  -> no result
+   - multi-keyword input like "New Delhi Ambala" or "delhi kalka" -> no result
+   - "wap7" (without dash) -> no result
+   - zero feedback when nothing matched (the grid just looked empty)
+
+Solution (applied to ALL 3 pages, identical helper functions):
+
+    normText(s)    -> lower-cases, replaces every non letter/number with a
+                      space (kills – — - / . , & etc.), trims.
+    textMatches(text, q)
+                 -> empty query matches everything
+                 -> full normalized phrase must appear, OR
+                 -> the query with spaces removed must appear (so "wap7" hits
+                    "WAP-7"), OR
+                 -> EVERY whitespace-separated word of the query must appear
+                    (so "new delhi ambala" and "delhi kalka" both match)
+    escapeHtml(s)  -> escapes user text before it is put into innerHTML
+
+   Where the code lives now:
+   index.html            : normText / textMatches / escapeHtml,
+                           renderPopup() , filterGamesGrid() , searchResults[]
+   msts-routes.html      : normText / textMatches / escapeHtml,
+                           renderRoutes() , filterRoutes() , updateStatus()
+   msts-locomotives.html : normText / textMatches / escapeHtml,
+                           renderLocos() , filterLocos() , updateStatus()
+
+   Behaviour added / fixed:
+   * routes page  : searching "KHANDESH DHULE UPDATE", "khandesh", "dhule",
+     "delhi - kalka", "kalka", "toy train", "1,500+ km", "NR" etc. all
+     show matching cards.
+   * locos page   : "WAP-7", "wap7", "wap 7", "WAP" (3 results), "high speed
+     passenger", "emd", "GZB" etc. all work.
+   * NEW result status bar (#searchStatus) under the filter chips on BOTH
+     listing pages: "Showing 2 of 6 routes for 'kalka'" + a Reset button,
+     and a real empty state "No routes found for '...' [Clear search & filters]"
+     (before: no message at all, page looked broken).
+   * Zone / power-type chip can no longer hide your search results: if a search
+     matches nothing inside the active chip, the code auto-switches the chip to
+     "All Zones"/"All Power", re-runs, and shows a yellow note
+     "...filter was ignored so your results could show."
+   * Escape key clears the search box on the listing pages.
+   * ?q= deep links still work (and now also scroll the control bar into view):
+       msts-routes.html?q=shimla
+       msts-routes.html?q=New%20Delhi%20%E2%80%93%20Ambala%20Cantt%20%E2%80%93%20Kalka
+       msts-locomotives.html?q=wap-7
+   * index.html popup: shows a result-count header ("3 results for 'kalka' —
+     Enter opens the first one"), Enter jumps to the top result, Escape closes,
+     max 8 rows, "No results found" message with a hint, and user input is
+     HTML-escaped before rendering (was an injection hole).
+   * index.html games grid: it is filtered by the search, BUT it is never left
+     empty — if nothing on this page matches, all 3 cards stay visible and the
+     popup carries the global results (before, searching a route name wiped the
+     whole Games section).
+
+5.2 SMOOTH PAGE SCROLL (this session, requested after the search fix)
+   * All 3 pages already had CSS: html{scroll-behavior:smooth;
+     scroll-padding-top:80px}  -> that stays.
+   * ADDED JS smooth scrolling on all 3 pages:
+       - every in-page anchor (a[href^="#"]) now scrollIntoView({behavior:'smooth'})
+         AND closes the mobile burger menu;
+       - href="#" placeholders are preventDefault-ed so clicking a Download /
+         social button no longer jumps the page to the top;
+       - smoothScrollToHash(): when you land on a page with a hash
+         (e.g. msts-routes.html#games or index.html#msts) the page glides to
+         that section instead of hard-jumping (runs on window load + a 400 ms
+         fallback);
+       - back-to-top button already used behavior:'smooth' (unchanged).
+   * ADDED to msts-routes.html + msts-locomotives.html the accessibility block
+     that index.html already had:
+         @media(prefers-reduced-motion:reduce){ ... html{scroll-behavior:auto} }
+
+5.3 HOUSEKEEPING THIS SESSION
+   * Created backup (see section 6).
+   * Temporary JS syntax checks + a temporary jsdom test harness were created
+     OUTSIDE this project (in the OpenTemp folder) and then DELETED at the
+     user's request — the user wants to do the final testing themselves.
+     Nothing test-related was left inside this project folder.
+
+5.4 CONTENT CHANGE — routes page, card 1 (4 Oct 2026, after 5.1 + 5.2)
+   * msts-routes.html  ->  Route Card 1 (the first card in #routeList):
+       OLD title : "New Delhi – Ambala Cantt – Kalka"
+       NEW title : "KHANDESH DHULE UPDATE"
+       OLD desc  : "High-speed Northern Railway trunk route featuring fully
+                    electrified track, automatic signalling, and the gateway to
+                    the historic Kalka-Shimla hill section."
+       NEW desc  : "The Khandesh Route Dhule Update for Microsoft Train Simulator
+                    (MSTS) and Open Rails has been officially released,
+                    introducing a realistic and detailed recreation of the
+                    Dhule to Chalisgaon Junction section."
+       (Title + description were changed first, then the specs — see below.
+        Zone tag "NR", Traction "25kV AC", Signalling "MACL Auto", the
+        "Popular" badge, icon 🏔️ and "480 MB" file size are still the original
+        values.)
+   * index.html  ->  global search entry for this card kept in sync:
+       title : "KHANDESH DHULE UPDATE"
+       url   : msts-routes.html?q=dhule   (was ?q=kalka, which would no longer
+               land on this card after the rename)
+   * Card specs updated (same session, right after the rename):
+       Length   : 270 km     ->  1,500+ km
+       Stations : 38         ->  200+
+       index.html search meta synced: "Northern Railway (NR) · 1,500+ km ·
+       25kV AC"
+   * The old title "New Delhi – Ambala Cantt – Kalka" still exists ONLY inside
+     code comments (examples of the normaliser) and in backup/ files.
+   * Search now behaves as: "khandesh"/"dhule"/"chalisgaon"/"1500" -> this card,
+     "kalka" -> only the Kalka-Shimla card (card 6).
+
+5.5 CONTENT CHANGE — every "Signalling" spec on the routes page (4 Oct 2026)
+   * msts-routes.html: the value next to the 🚦 "Signalling:" spec was replaced
+     on ALL 4 cards that have that spec, with the single value:
+         XTracks + NewRoads + Db tracks (Required)
+     Cards updated:  1 (KHANDESH DHULE UPDATE), 2 (Mumbai Central – Surat –
+     Vadodara), 4 (Howrah – Asansol – Dhanbad), 5 (Chennai – Jolarpettai –
+     Bangalore).  Old values were: MACL Auto / 4-Aspect Auto / Absolute Auto /
+     MACL.
+     Card 3 (Mumbai CSMT – Pune, has "Gradients") and card 6 (Kalka – Shimla,
+     has "Gauge"/"Tunnels") have NO Signalling spec, so they were untouched.
+   * Locomotives page has no Signalling spec — nothing changed there.
+   * FINAL SHAPE (user corrected it after the first attempt): the 🚦 emoji AND
+     the "Signalling:" label were BOTH removed. The spec row now contains only
+     the bold value:
+         <div class="spec-item"><strong>XTracks + NewRoads + Db tracks (Required)</strong></div>
+     (First attempt had <span class="ico">🚦</span><span>Signalling:</span> kept
+     around it — that was wrong, do not add it back.)
+   * Long value wraps onto 2-3 lines inside the spec box (normal, CSS wraps).
+
+5.6 CONTENT CHANGE — routes page, card 3 (4 Oct 2026)
+   * msts-routes.html  ->  Route Card 3 (3rd article in #routeList):
+        OLD title : "Mumbai Central – Surat – Vadodara"
+        NEW title : "TGNC (SEALDAH update)"
+        OLD desc  : "Western Railway's flagship trunk mainline. Handle
+                     high-speed Rajdhani expresses and dense Mumbai suburban
+                     local trains along the coastal corridor."
+        NEW desc  : "The TGNC Sealdah Update for Microsoft Train Simulator
+                     (MSTS) and Open Rails. Recreates Eastern Railway's busy
+                     Sealdah suburban network out of Kolkata, with dense local
+                     traffic, big junction yards and mainline expresses."
+        Zone tag  : WR  ->  ER   (also data-zone="WR" -> data-zone="ER")
+        Type tag  : "Suburban" (unchanged)
+        Icon      : 🌊  ->  🌆
+        Specs     : Length 390 km -> 250 km
+                    Traction 25kV AC (unchanged)
+                    Stations 52 -> 60
+                    XTracks + NewRoads + Db tracks (Required)  (unchanged row)
+        File size : 650 MB -> 620 MB
+   * index.html  ->  global search entry for this card kept in sync:
+        title : "TGNC (SEALDAH update)"
+        meta  : "Eastern Railway (ER) · 250 km · Suburban"
+        url   : msts-routes.html?q=tgnc   (was ?q=mumbai)
+   * Search now behaves as: "tgnc" / "sealdah" / "kolkata" / "er" / "250" ->
+     this card; "mumbai" / "vadodara" -> only the Mumbai CSMT – Pune
+     (Bhor Ghat) card, which was NOT touched.
+   * SIDE EFFECT: this was the ONLY card with data-zone="WR", so the
+     "Western" chip on the routes page now lists 0 routes (shows the
+     "No routes found in Western" status with a Clear button). The "Eastern"
+     chip now lists 2 (TGNC + Howrah – Asansol – Dhanbad).
+
+5.7 CONTENT CHANGE — routes page: specs removed + card 3 renamed (4 Oct 2026)
+   * msts-routes.html  ->  THREE spec rows deleted from ALL 7 route cards:
+        - 📏 "Length:" row      (7 cards)
+        - ⚡ "Traction:" row     (7 cards)
+        - 🚉 "Stations:" row     (6 cards — Kalka had none)
+        Removed values were: 1,500+ km / 450 / 250 / 192 / 260 / 358 / 96 km;
+        25kV AC (x6) and Diesel / ZDM3; 200+ / 65 / 60 / 32 / 44 / 48 stations.
+        How: one UTF-8-safe regex pass over spec-item lines labelled
+        Length|Traction|Stations (20 lines, verified by match count before
+        writing). Nothing else in the file was touched.
+        KEPT on purpose (not Length/Traction/Stations):
+          card 4 Mumbai CSMT – Pune : 🧗 Gradients: 1:37 Incline
+          card 7 Kalka – Shimla      : 🛤️ Gauge: 762mm (NG) + 🚇 Tunnels: 102
+          all other cards            : the "XTracks + NewRoads + Db tracks
+          (Required)" bold row (no label, so it never matched the regex).
+        Every .route-specs box still has >= 1 row, so no empty spec panel.
+   * msts-routes.html  ->  card 3 renamed:
+        OLD title : "TGNC (SEALDAH update)"
+        NEW title : "The Great Northern Corridor (TGNC)"
+        OLD desc  : "The TGNC Sealdah Update for Microsoft Train Simulator
+                     (MSTS) and Open Rails. ..."
+        NEW desc  : "The Great Northern Corridor (TGNC) — Sealdah Update for
+                     Microsoft Train Simulator (MSTS) and Open Rails.
+                     Recreates Eastern Railway's busy Sealdah suburban network
+                     out of Kolkata, with dense local traffic, big junction
+                     yards and mainline expresses."
+        Zone ER / Suburban tag / 🌆 icon / 620 MB  all unchanged (from 5.6).
+   * index.html  ->  search entries synced (lengths + traction no longer shown
+     on the cards, so they were dropped from the meta strings too):
+        KHANDESH DHULE UPDATE        "Northern Railway (NR) · Popular"
+        Dakshina Madhya Railway      "South Central Railway (SCR) ·
+                                      Trunk Mainline"
+        The Great Northern Corridor  "Eastern Railway (ER) · Suburban"
+         (TGNC)                      url still msts-routes.html?q=tgnc
+        Mumbai CSMT – Pune           "Central Railway (CR) · 1:37 Ghat Incline"
+        Howrah Grand Cord            "Eastern Railway (ER) · Coalfield Mainline"
+        Chennai – Jolarpettai        "Southern Railway (SR) · Scenic Coastal"
+        Kalka – Shimla               "Northern Railway (NR) · UNESCO Heritage"
+   * SIDE EFFECTS on search:
+        "tgnc" / "great northern corridor" / "sealdah" -> card 3 (on BOTH pages)
+        "tgnc seal dah update" still matches (all words are present).
+        Searching a number like "1,500+ km", "390", "52" no longer matches the
+        routes page — those values are gone from the cards. This invalidates
+        the example on line 135 of this file (section 5.1); the section is left
+        as historical record.
+        Zone chips, status bar, ?q= deep links all unchanged.
+
+5.8 CONTENT CHANGE — routes page: last 3 spec rows removed (4 Oct 2026)
+   * msts-routes.html  ->  the remaining labelled spec rows are gone:
+        card 4 Mumbai CSMT – Pune : 🧗 Gradients: 1:37 Incline
+        card 7 Kalka – Shimla      : 🛤️ Gauge: 762mm (NG)
+                                     🚇 Tunnels: 102 Tunnels
+        Those two cards were left with an EMPTY .route-specs box, so the whole
+        <div class="route-specs">…</div> wrapper was removed from them too
+        (otherwise an empty rounded panel would render under the description).
+        Card 7's description still mentions "102 tunnels" and card 4's still
+        mentions "1:37 gradients" — only the spec rows were deleted.
+   * AFTER 5.7 + 5.8 the only spec content left on the routes page is the
+     unlabelled bold row (5 cards: Khandesh, Dakshina Madhya, TGNC, Howrah
+     Grand Cord, Chennai):
+          <div class="spec-item"><strong>XTracks + NewRoads + Db tracks
+          (Required)</strong></div>
+     Cards 4 and 7 have no spec panel at all. .route-specs / .spec-item CSS is
+     still there (shared, needed by the 5 remaining panels).
+   * index.html  ->  meta for Mumbai CSMT – Pune synced (the 1:37 value is no
+     longer on the card):  "Central Railway (CR) · Ghat Section"
+     (matches the card's badge tag). All other search entries unchanged.
+   * Side effect: searching "762", "102", "1:37" no longer matches the routes
+     page.
+
+5.9 CONTENT CHANGE — routes page: XTracks row on ALL cards (4 Oct 2026)
+   * msts-routes.html  ->  the 2 cards that still had NO spec panel (they lost
+     their last rows in 5.8) now carry the standard required row too:
+        card 4 Mumbai CSMT – Pune (Bhor Ghat)
+        card 7 Kalka – Shimla Narrow Gauge (Toy Train)
+     Inserted right after the <p class="route-desc"> inside .route-body:
+          <div class="route-specs">
+            <div class="spec-item"><strong>XTracks + NewRoads + Db tracks (Required)</strong></div>
+          </div>
+   * FINAL SHAPE of every one of the 7 route cards: header (zone tag + badge +
+     icon) -> title -> description -> ONE .route-specs panel with the single
+     unlabelled bold row "XTracks + NewRoads + Db tracks (Required)" ->
+     footer (file size + Download). Verified: 7 x .route-specs, 7 x spec-item,
+     no empty panels, no Length/Traction/Stations/Gradients/Gauge/Tunnels rows.
+   * index.html : no change needed (XTracks was never part of a meta string).
+
+5.10 CONTENT CHANGE — routes page: "Published" spec on ALL cards (4 Oct 2026)
+   * msts-routes.html  ->  a NEW spec row was added to all 7 cards, directly
+     BELOW the XTracks row (single replaceAll on the identical XTracks line,
+     7/7 hits):
+          <div class="spec-item"><span class="ico">📅</span><span>Published:</span> <strong>4 Oct 2026</strong></div>
+     Date written as today, 4 Oct 2026 — same format as this file's dates.
+   * Each .route-specs panel now holds exactly 2 rows. CSS at line 180 is
+     grid-template-columns:1fr 1fr, so they sit SIDE BY SIDE:
+        [ XTracks + NewRoads + Db tracks (Required) ] [ 📅 Published: 4 Oct 2026 ]
+     (the XTracks value wraps over 2-3 lines on narrow cards — normal CSS
+     wrapping, unchanged behaviour).
+   * index.html : not touched — the date lives only on the route cards.
+   * Search: "published", "4 oct 2026" / "oct 2026" now match every route card
+     on msts-routes.html (card textContent is searched).
+
+5.11 CSS CHANGE — routes page: spec rows full-width + date on one line
+   * msts-routes.html (style block, .route-specs):
+        OLD: grid-template-columns:1fr 1fr   (2 side-by-side columns)
+        NEW: grid-template-columns:1fr       (1 column -> every row spans the
+             full width of the spec panel)
+        + added rule:  .route-specs .spec-item:last-child{white-space:nowrap}
+        (the last row in every card is the 📅 Published: 4 Oct 2026 row, so it
+         can never break onto a second line — it renders fully horizontal.)
+   * Effect on all 7 cards: XTracks row takes the whole width (wraps to 1-2
+     lines instead of squeezing into half the box) and the Published date sits
+     under it on its own single, full-width line.
+   * index.html untouched; no markup changed, CSS only.
+
+--------------------------------------------------------------------------------
+6. BACKUP  (how to undo everything)
+--------------------------------------------------------------------------------
+Folder : C:\Users\2011n\Downloads\Ankovex Games\backup\pre-search-fix-2026-10-04\
+Contains (exact copies made BEFORE this session's edits, 4 Oct 2026):
+    backup\pre-search-fix-2026-10-04\index.html              (38,365 bytes)
+    backup\pre-search-fix-2026-10-04\msts-routes.html        (31,959 bytes)
+    backup\pre-search-fix-2026-10-04\msts-locomotives.html   (32,397 bytes)
+
+TO RESTORE (rollback to the GLM state):
+    Copy the 3 files from backup\pre-search-fix-2026-10-04\ over the 3 files
+    in the project root. That removes BOTH the search fix and the smooth-scroll
+    additions, returning to exactly what existed before this session.
+
+NOTE: this folder is not under git — this backup is the ONLY rollback point.
+      If you make another snapshot, name it backup\<reason>-<yyyy-mm-dd>\.
+
+--------------------------------------------------------------------------------
+7. PENDING / TODO  (not done yet — pick any of these next)
+--------------------------------------------------------------------------------
+[ ] Real download URLs for every card (currently href="#").
+[ ] Sounds page + Mods & Addons page (nav/footer currently link to #msts).
+[ ] Games section: cards link to "#" (Train Simulators / Other Games / Game Files).
+[ ] Real social links (Telegram, Discord, YouTube, Instagram).
+[ ] Footer legal links (Privacy, Terms, DMCA), Contact, Request a File forms.
+[ ] The hero stats (250+ Games, 900+ MSTS Addons, 150+ Routes) and
+    "12.4K downloads today" are placeholder numbers.
+[ ] No favicon yet (only theme-color meta).
+[ ] Content: only 6 routes and 6 locomotives exist as cards, while the site
+    claims 150+ routes / 900+ addons — more cards or honest numbers needed.
+[ ] index.html search box filters the Games cards but there is no dedicated
+    results page (only the dropdown popup).
+
+--------------------------------------------------------------------------------
+8. RULES FOR THE NEXT AI (please follow)
+--------------------------------------------------------------------------------
+1. Read THIS file before touching anything, then read the 3 HTML files.
+2. Keep everything in a single HTML file per page (no build step, no npm, no
+   framework) and match the existing style: dark glassmorphism, CSS variables
+   on :root (--cyan #22d3ee, --violet #8b5cf6, --radius 22px, --max 1240px),
+   fonts Sora (headings) + Inter (body), classes like .glass / .route-card /
+   .loco-card / .reveal / .filter-chip.
+3. The three pages share code by COPY-PASTE (their script/CSS blocks are
+   intentionally duplicated). If you change a shared helper (normText,
+   textMatches, scroll helpers), change it in ALL THREE files.
+4. Test manually in the browser — the user does the testing. Do not leave any
+   test scripts, node_modules or tooling inside this project folder.
+5. After every change, update this info.txt (add a dated section under 5.x and
+   bump "Last updated").
+6. If you create a snapshot, put it in backup\<reason>-<yyyy-mm-dd>\ and list
+   it in section 6.
+
+--------------------------------------------------------------------------------
+9. QUICK SMOKE TEST (manual, for the user)
+--------------------------------------------------------------------------------
+Open index.html and in the search box type:
+    Khandesh / Dhule / Chalisgaon    -> the KHANDESH DHULE UPDATE route card
+    kalka                            -> 1-2 results (Kalka-Shimla card)
+    wap7 / WAP-7 / wap               -> loco results
+    zzzz                             -> "No results found"
+Enter = open first result, Escape = clear.
+On msts-routes.html / msts-locomotives.html type the same strings directly in
+the page search box — cards filter live and the status bar shows the count.
+Also check: nav/footer anchors and the back-to-top button scroll smoothly, and
+arriving at e.g. index.html#msts scrolls smoothly to that section.
+================================================================================
