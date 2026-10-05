@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="MSTS Indian Routes — Download authentic Indian Railway routes, electrified corridors, hill sections and realistic scenarios for Microsoft Train Simulator.">
-<meta name="theme-color" content="#05070f">
+<meta name="theme-color" content="#071018">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="index, follow">
 <title>MSTS Routes — Ankovex Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -265,9 +267,11 @@ footer{margin-top:70px;border-top:1px solid rgba(255,255,255,.07);
   html{scroll-behavior:auto}
 }
 </style>
+<link rel="stylesheet" href="hub-enhancements.css">
 </head>
 <body>
 
+<a class="skip-link" href="#content">Skip to main content</a>
 <div class="bg"></div>
 <div class="grid-lines"></div>
 <div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
@@ -275,7 +279,7 @@ footer{margin-top:70px;border-top:1px solid rgba(255,255,255,.07);
 <div id="progress"></div>
 
 <!-- NAV -->
-<nav id="nav">
+<nav id="nav" aria-label="Primary navigation">
   <a href="index.html" class="logo">
     <span class="logo-text">Ankovex <span>Hub</span></span>
   </a>
@@ -299,10 +303,17 @@ footer{margin-top:70px;border-top:1px solid rgba(255,255,255,.07);
   <p>Explore iconic electrified mainlines, mountain railways, coastal routes and busy metropolitan junctions created for Microsoft Train Simulator &amp; Open Rails.</p>
 </header>
 
+<div class="collection-pulse reveal" aria-label="Routes collection overview">
+  <div class="pulse-item"><span class="pulse-icon">06</span><div><small>Library size</small><strong>Indian route packs</strong></div></div>
+  <div class="pulse-item"><span class="pulse-icon">◎</span><div><small>Coverage</small><strong>NR · CR · ER · SR · NFR</strong></div></div>
+  <div class="pulse-item"><span class="pulse-icon">↗</span><div><small>Simulator ready</small><strong>MSTS + Open Rails</strong></div></div>
+</div>
+
 <!-- CONTROLS -->
-<div class="control-bar">
+<div class="control-bar" role="search">
+  <div class="control-copy"><span class="control-kicker">Browse</span><strong>Route navigator</strong></div>
   <div class="search-wrapper">
-    <input type="text" id="routeSearch" placeholder="Search route by name, zone, station..." aria-label="Search routes">
+    <input type="text" id="routeSearch" placeholder="Search route by name, zone, station..." autocomplete="off" aria-label="Search routes">
   </div>
   <div class="filter-tags">
     <button class="filter-chip active" data-zone="all">All Zones</button>
@@ -311,6 +322,7 @@ footer{margin-top:70px;border-top:1px solid rgba(255,255,255,.07);
     <button class="filter-chip" data-zone="WR">Western</button>
     <button class="filter-chip" data-zone="SR">Southern</button>
     <button class="filter-chip" data-zone="ER">Eastern</button>
+    <button class="filter-chip" data-zone="NFR">Northeast Frontier</button>
   </div>
 </div>
 
@@ -318,7 +330,7 @@ footer{margin-top:70px;border-top:1px solid rgba(255,255,255,.07);
 <div class="search-status" id="searchStatus" role="status" aria-live="polite"></div>
 
 <!-- ROUTE LIST -->
-<main class="container">
+<main class="container" id="content">
   <div class="route-grid" id="routeList">
 
     <!-- Card 1 -->
@@ -391,24 +403,24 @@ footer{margin-top:70px;border-top:1px solid rgba(255,255,255,.07);
     </article>
 
     <!-- Card 3 -->
-    <article class="route-card reveal" data-zone="CR">
+    <article class="route-card reveal" data-zone="NFR">
       <div class="route-header">
         <div class="route-badge-row">
-          <span class="zone-tag">CR</span>
-          <span class="featured-tag">Ghat Section</span>
+          <span class="zone-tag">NFR</span>
+          <span class="featured-tag">Latest Update</span>
         </div>
-        <div class="route-icon">⛰️</div>
+        <div class="route-icon">🌿</div>
       </div>
       <div class="route-body">
-        <h3>Mumbai CSMT – Pune (Bhor Ghat)</h3>
-        <p class="route-desc">Experience the legendary Bhor Ghat incline with catch-sidings, steep 1:37 gradients, multi-loco banker operations, and breathtaking Sahyadri views.</p>
+        <h3>NFR_V2.2_LATEST_UPDATE</h3>
+        <p class="route-desc">Explore the Guwahati–New Jalpaiguri corridor through Lower Assam and North Bengal. This NFR update follows the single-line “Chicken’s Neck” near Siliguri, with forest scenery, green paddy fields and an approximately 160 km compressed simulator route.</p>
         <div class="route-specs">
-          <div class="spec-item"><strong>XTracks + NewRoads + Db tracks (Required)</strong></div>
-          <div class="spec-item"><span class="ico">📅</span><span>Published:</span> <strong>4 Oct 2026</strong></div>
+          <div class="spec-item"><strong>Guwahati → New Jalpaiguri · MSTS / Open Rails</strong></div>
+          <div class="spec-item"><span class="ico">📅</span><span>Published:</span> <strong>5 Oct 2026</strong></div>
         </div>
       </div>
       <div class="route-footer">
-        <span class="file-size">📦 520 MB</span>
+        <span class="file-size">📦 NFR V2.2</span>
         <a href="#" class="btn-dl">Download <span class="arw">↓</span></a>
       </div>
     </article>
@@ -565,7 +577,7 @@ footer{margin-top:70px;border-top:1px solid rgba(255,255,255,.07);
     </div>
   </div>
   <div class="foot-bottom">
-    <div>© 2026 <span>Ankovex Hub</span> · Built with ❤️ for the community</div>
+    <div>© <span data-year>2026</span> <span>Ankovex Hub</span> · Built with ❤️ for the community</div>
     <div>Privacy · Terms · DMCA</div>
   </div>
 </footer>
@@ -783,5 +795,6 @@ if (queryParam) {
   if(bar) setTimeout(()=>bar.scrollIntoView({behavior:'smooth',block:'center'}),200);
 }
 </script>
+<script src="hub-enhancements.js"></script>
 </body>
 </html>

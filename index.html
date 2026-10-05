@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Ankovex Hub — Your ultimate destination for games, pre-installed files, MSTS Indian addons, routes, locomotives, sounds & mods downloads.">
-<meta name="theme-color" content="#05070f">
+<meta name="theme-color" content="#071018">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="index, follow">
 <title>Ankovex Hub — Games & MSTS Addons</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -310,9 +312,11 @@ footer{margin-top:60px;border-top:1px solid rgba(255,255,255,.07);
   html{scroll-behavior:auto}
 }
 </style>
+<link rel="stylesheet" href="hub-enhancements.css">
 </head>
 <body>
 
+<a class="skip-link" href="#home">Skip to main content</a>
 <div class="bg"></div>
 <div class="grid-lines"></div>
 <div class="orb a"></div><div class="orb b"></div><div class="orb c"></div><div class="orb d"></div>
@@ -320,7 +324,7 @@ footer{margin-top:60px;border-top:1px solid rgba(255,255,255,.07);
 <div id="progress"></div>
 
 <!-- NAV -->
-<nav id="nav">
+<nav id="nav" aria-label="Primary navigation">
   <a href="#home" class="logo">
     <span class="logo-text">Ankovex <span>Hub</span></span>
   </a>
@@ -348,17 +352,29 @@ footer{margin-top:60px;border-top:1px solid rgba(255,255,255,.07);
     <div class="stat"><div class="stat-num" data-count="150" data-suffix="+">0</div><div class="stat-label">Routes</div></div>
     <div class="stat"><div class="stat-num" data-count="24" data-suffix="/7">0</div><div class="stat-label">Support</div></div>
   </div>
+  <div class="hero-note" aria-label="Hub status">
+    <span><i class="signal"></i> Community-curated library</span>
+    <span>↻ Fresh drops every week</span>
+    <span>⌁ Built for MSTS &amp; Open Rails</span>
+  </div>
 </header>
 
-<main class="container">
+<main class="container" id="content">
+
+  <div class="collection-pulse reveal" aria-label="Ankovex Hub highlights">
+    <div class="pulse-item"><span class="pulse-icon">✦</span><div><small>Fresh this week</small><strong>Curated new releases</strong></div></div>
+    <div class="pulse-item"><span class="pulse-icon">⌁</span><div><small>Built for</small><strong>MSTS &amp; Open Rails</strong></div></div>
+    <div class="pulse-item"><span class="pulse-icon">↗</span><div><small>Discover faster</small><strong>One search for everything</strong></div></div>
+  </div>
 
   <!-- GAMES -->
   <section id="games" class="block">
     <div class="sec-head reveal">
+      <span class="section-kicker">Start here</span>
       <h2>🎮 Games &amp; <em>Pre-installed Files</em></h2>
       <p>Ready-to-play titles with mods support, original game files and patches — download, extract, play.</p>
     </div>
-    <div class="download-bar reveal">
+    <div class="download-bar reveal" role="search">
       <div class="search-box">
         <input type="text" placeholder="Search games, routes, locomotives, mods..." aria-label="Search" autocomplete="off">
         <div class="search-results-popup" id="searchPopup"></div>
@@ -393,6 +409,7 @@ footer{margin-top:60px;border-top:1px solid rgba(255,255,255,.07);
   <!-- MSTS -->
   <section id="msts" class="block">
     <div class="sec-head reveal">
+      <span class="section-kicker">The collection</span>
       <h2>🚃 MSTS Indian <em>Addons</em></h2>
       <p>The largest hand-picked collection of Indian Railway content for Microsoft Train Simulator.</p>
     </div>
@@ -438,6 +455,7 @@ footer{margin-top:60px;border-top:1px solid rgba(255,255,255,.07);
   <!-- WHY US -->
   <section id="why" class="block">
     <div class="sec-head reveal">
+      <span class="section-kicker">Why Ankovex</span>
       <h2>Built for gamers, <em>made with love</em></h2>
       <p>Everything on Ankovex Hub is verified, organised and served with zero confusing download walls.</p>
     </div>
@@ -504,7 +522,7 @@ footer{margin-top:60px;border-top:1px solid rgba(255,255,255,.07);
     </div>
   </div>
   <div class="foot-bottom">
-    <div>© 2026 <span>Ankovex Hub</span> · Built with ❤️ for the community</div>
+    <div>© <span data-year>2026</span> <span>Ankovex Hub</span> · Built with ❤️ for the community</div>
     <div>Privacy · Terms · DMCA</div>
   </div>
 </footer>
@@ -657,7 +675,7 @@ const searchableItems = [
   { title: "KHANDESH DHULE UPDATE", meta: "Northern Railway (NR) · Popular", type: "Route", badgeClass: "", url: "msts-routes.html?q=dhule" },
   { title: "Dakshina Madhya Railway", meta: "South Central Railway (SCR) · Trunk Mainline", type: "Route", badgeClass: "", url: "msts-routes.html?q=dakshina" },
   { title: "The Great Northern Corridor (TGNC)", meta: "Eastern Railway (ER) · Suburban", type: "Route", badgeClass: "", url: "msts-routes.html?q=tgnc" },
-  { title: "Mumbai CSMT – Pune (Bhor Ghat)", meta: "Central Railway (CR) · Ghat Section", type: "Route", badgeClass: "", url: "msts-routes.html?q=pune" },
+  { title: "NFR_V2.2_LATEST_UPDATE", meta: "Northeast Frontier Railway (NFR) · Guwahati–New Jalpaiguri · ~160 km", type: "Route", badgeClass: "", url: "msts-routes.html?q=NFR_V2.2_LATEST_UPDATE" },
   { title: "Howrah – Asansol – Dhanbad (Grand Chord)", meta: "Eastern Railway (ER) · Coalfield Mainline", type: "Route", badgeClass: "", url: "msts-routes.html?q=howrah" },
   { title: "Chennai Central – Jolarpettai – Bangalore", meta: "Southern Railway (SR) · Scenic Coastal", type: "Route", badgeClass: "", url: "msts-routes.html?q=bangalore" },
   { title: "Kalka – Shimla Narrow Gauge (Toy Train)", meta: "Northern Railway (NR) · UNESCO Heritage", type: "Route", badgeClass: "", url: "msts-routes.html?q=shimla" },
@@ -769,5 +787,6 @@ searchInput.addEventListener('focus', function() {
   if (this.value.trim()) renderPopup();
 });
 </script>
+<script src="hub-enhancements.js"></script>
 </body>
 </html>

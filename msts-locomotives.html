@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="MSTS Indian Locomotives — Download WAP-7, WAP-5, WAP-4, WDM-3D, WDG-4, WAG-9, and Steam locomotives with authentic 3D cabs, sounds & physics for MSTS and Open Rails.">
-<meta name="theme-color" content="#05070f">
+<meta name="theme-color" content="#071018">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="index, follow">
 <title>MSTS Locomotives — Ankovex Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -263,9 +265,11 @@ footer{margin-top:70px;border-top:1px solid rgba(255,255,255,.07);
   html{scroll-behavior:auto}
 }
 </style>
+<link rel="stylesheet" href="hub-enhancements.css">
 </head>
 <body>
 
+<a class="skip-link" href="#content">Skip to main content</a>
 <div class="bg"></div>
 <div class="grid-lines"></div>
 <div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
@@ -273,7 +277,7 @@ footer{margin-top:70px;border-top:1px solid rgba(255,255,255,.07);
 <div id="progress"></div>
 
 <!-- NAV -->
-<nav id="nav">
+<nav id="nav" aria-label="Primary navigation">
   <a href="index.html" class="logo">
     <span class="logo-text">Ankovex <span>Hub</span></span>
   </a>
@@ -298,10 +302,17 @@ footer{margin-top:70px;border-top:1px solid rgba(255,255,255,.07);
   <p>Authentic 3-phase electrics, legendary ALCO &amp; EMD diesels, and classic steam locomotives with high-resolution cabs, custom physics, realistic sound sets and livery packs.</p>
 </header>
 
+<div class="collection-pulse reveal" aria-label="Locomotives collection overview">
+  <div class="pulse-item"><span class="pulse-icon">06</span><div><small>Library size</small><strong>Indian locomotive packs</strong></div></div>
+  <div class="pulse-item"><span class="pulse-icon">⚡</span><div><small>Power types</small><strong>Electric · ALCO · EMD</strong></div></div>
+  <div class="pulse-item"><span class="pulse-icon">↗</span><div><small>Cab ready</small><strong>Physics + sound sets</strong></div></div>
+</div>
+
 <!-- CONTROLS -->
-<div class="control-bar">
+<div class="control-bar" role="search">
+  <div class="control-copy"><span class="control-kicker">Browse</span><strong>Loco navigator</strong></div>
   <div class="search-wrapper">
-    <input type="text" id="locoSearch" placeholder="Search by class (WAP-7, WDM-3D), shed, traction..." aria-label="Search locomotives">
+    <input type="text" id="locoSearch" placeholder="Search by class (WAP-7, WDM-3D), shed, traction..." autocomplete="off" aria-label="Search locomotives">
   </div>
   <div class="filter-tags">
     <button class="filter-chip active" data-type="all">All Power</button>
@@ -316,7 +327,7 @@ footer{margin-top:70px;border-top:1px solid rgba(255,255,255,.07);
 <div class="search-status" id="searchStatus" role="status" aria-live="polite"></div>
 
 <!-- LOCOMOTIVE LIST -->
-<main class="container">
+<main class="container" id="content">
   <div class="loco-grid" id="locoList">
 
     <!-- Card 1 -->
@@ -553,7 +564,7 @@ footer{margin-top:70px;border-top:1px solid rgba(255,255,255,.07);
     </div>
   </div>
   <div class="foot-bottom">
-    <div>© 2026 <span>Ankovex Hub</span> · Built with ❤️ for the community</div>
+    <div>© <span data-year>2026</span> <span>Ankovex Hub</span> · Built with ❤️ for the community</div>
     <div>Privacy · Terms · DMCA</div>
   </div>
 </footer>
@@ -770,5 +781,6 @@ if (queryParam) {
   if(bar) setTimeout(()=>bar.scrollIntoView({behavior:'smooth',block:'center'}),200);
 }
 </script>
+<script src="hub-enhancements.js"></script>
 </body>
 </html>
